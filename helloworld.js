@@ -10,21 +10,74 @@ var my = 0;
 var loaded = false;
 var imageObj;
 
+function windowOnLoad()
+{
+	var canvas = document.getElementById('myCanvas');
+	
+	// Force canvas to dynamically change its size to
+	// the same width/height as the browser window
+	canvas.width = document.body.clientWidth;
+	canvas.height = document.body.clientHeight;
+	
+	var c = canvas.getContext('2d');
+
+	var grd = c.createLinearGradient(0, 0, canvas.width, canvas.height);
+	
+	var grdColors = {
+		begin : '#ceefff',
+		end : '#52bcff' };
+	
+	grd.addColorStop(0, grdColors.begin );
+	grd.addColorStop(1, grdColors.end );
+	c.fillStyle = grd;
+	c.fillRect(0, 0, canvas.width, canvas.height);
+
+	var phrase = "Click or tap the screen to start the game";
+	c.font = 'bold 16px Arial, sans-serif';
+	c.fillStyle = '#FFFFFF';
+	c.fillText (phrase, 10, 30);
+	
+	function fadeToWhite(alphaVal) 
+	{
+		// If the function hasn't received any parameters, start with 0.02
+		var alphaVal = (alphaVal == undefined) ? 0.02 : parseFloat(alphaVal) + 0.02;
+		// Set the color to white
+		c.fillStyle = '#FFFFFF';
+		// Set the Global Alpha
+		c.globalAlpha = alphaVal;
+		// Make a rectangle as big as the canvas
+		c.fillRect(0, 0, canvas.width, canvas.height);
+		if (alphaVal < 1.0) {
+			setTimeout(function() {fadeToWhite(alphaVal);}, 30);
+		}
+	}
+	
+	function onClick()
+	{
+		fadeToWhite();
+	}
+	window.onclick = onClick;
+}
+
 function init()
 {
+	window.onload = windowOnLoad;
 	window.onkeydown = keyDownControl;
 	window.onkeyup = keyUpControl;
 	canvas = document.getElementById("myCanvas");			
 	context = canvas.getContext("2d");
 	
-	imageObj = new Image();
-	imageObj.src = "superbrothers_pixel_sports.jpg";
-	imageObj.onload = function(){
+	function onLoad()
+	{
 		context.drawImage(imageObj, x, y);	<!--应该在onload里面做，否则load没完成时调没有任何效果-->
 		loaded = true;
 	};
 	
-	return setInterval( draw, 10 );
+	//imageObj = new Image();
+	//imageObj.src = "superbrothers_pixel_sports.jpg";
+	//imageObj.onload = onLoad;
+	
+	//return setInterval( draw, 10 );
 }
 
 function draw()
@@ -38,29 +91,25 @@ function draw()
 	y += my;
 }
 
-function da_mao_mao( num, hard )
-{
-	alert( "打毛毛" + num + "下，用力" + hard + "级" );
-}
-
 function keyDownControl(event)
 {
-	if(event.keyCode==37) {
+	if( event.keyCode==37 )
+	{
 		mx = -2;
 		my = 0;
-		alert("老公爱乖乖");
-	} else
-	if (event.keyCode==38) {
+	}
+	else if( event.keyCode==38 )
+	{
 		mx = 0;
 		my = -2;
-		da_mao_mao(100,100);
-	} else if
-	(event.keyCode==39) {
+	}
+	else if( event.keyCode==39 )
+	{
 		mx = 2;
 		my = 0;
-		alert("guaiguaiailaogong" );
-	} else
-	if (event.keyCode==40) {
+	}
+	else if( event.keyCode==40 )
+	{
 		mx = 0;
 		my = 2;
 	}
